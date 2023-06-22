@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weather.providers.AppViewModelsProvider
+import com.example.weather.ui.screens.main.CurrentWeather
 import com.example.weather.ui.screens.main.MainViewModel
 import com.example.weather.ui.screens.main.WeatherState
 import com.example.weather.ui.theme.WeatherTheme
@@ -40,6 +41,7 @@ fun TestScreen(
 ){
     when(viewModel.weatherState){
         is WeatherState.Success -> {
+            CurrentWeather(backgroundImage = R.drawable.sunrise, weather = (viewModel.weatherState as WeatherState.Success).weather)
             Log.d("ServiceApi", (viewModel.weatherState as WeatherState.Success).weather.name)
         }
         is WeatherState.Loading -> {
