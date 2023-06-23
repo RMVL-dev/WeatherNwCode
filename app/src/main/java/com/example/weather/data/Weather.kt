@@ -21,9 +21,9 @@ data class Weather(
     @SerialName("dt")
     val dt:Int,
     @SerialName("sys")
-    val sun:RiseSet,
+    val sun:RiseSet? = null,
     @SerialName("name")
-    val name:String,
+    val name:String? = null,
     @SerialName("cod")
-    val responseCode:Int
+    val responseCode:Int? = null
 )

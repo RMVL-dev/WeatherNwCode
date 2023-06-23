@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RiseSet(
-    @SerialName("sunrise")
-    val sunrise:Int? = null,
-    @SerialName("sunset")
-    val sunset:Int? = null
+data class City(
+    @SerialName("id")
+    val id:Int,
+    @SerialName("name")
+    val name:String
 )

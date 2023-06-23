@@ -5,12 +5,16 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.weather.WeatherApplication
+import com.example.weather.ui.screens.forecast.ForecastViewModel
 import com.example.weather.ui.screens.main.MainViewModel
 
 object AppViewModelsProvider {
     val Factory = viewModelFactory {
         initializer {
             MainViewModel(weatherApplication().appContainer.weatherRepository)
+        }
+        initializer {
+            ForecastViewModel(weatherApplication().appContainer.weatherRepository)
         }
     }
 }

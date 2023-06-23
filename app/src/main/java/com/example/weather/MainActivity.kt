@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weather.navigation.WeatherApp
 import com.example.weather.providers.AppViewModelsProvider
 import com.example.weather.ui.screens.main.CurrentWeather
 import com.example.weather.ui.screens.main.MainViewModel
@@ -26,30 +27,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TestScreen()
+                    WeatherApp()
                 }
             }
         }
     }
 }
 
-@Composable
-fun TestScreen(
-    viewModel:MainViewModel = viewModel(
-        factory = AppViewModelsProvider.Factory
-    )
-){
-    when(viewModel.weatherState){
-        is WeatherState.Success -> {
-            CurrentWeather(backgroundImage = R.drawable.sunrise, weather = (viewModel.weatherState as WeatherState.Success).weather)
-            Log.d("ServiceApi", (viewModel.weatherState as WeatherState.Success).weather.name)
-        }
-        is WeatherState.Loading -> {
-            Log.d("ServiceApi", "Loading")
-        }
-        is WeatherState.Error -> {
-            Log.d("ServiceApi", "error")
-        }
-    }
-
-}

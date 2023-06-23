@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Wind(
     @SerialName("speed")
-    val speed:Int,
+    val speed:Float,
     @SerialName("deg")
     val deg:Int
 )
