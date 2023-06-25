@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.weather.R
 import com.example.weather.providers.AppViewModelsProvider
 import com.example.weather.ui.screens.details.DetailsScreen
 import com.example.weather.ui.screens.forecast.ForecastScreen
@@ -17,7 +16,6 @@ import com.example.weather.ui.screens.main.MainViewModel
 import com.example.weather.ui.screens.utils.getBackgroundImage
 
 enum class NavigationGraph(title:String){
-    Splash(title = "Splash"),
     CurrentWeather(title = "Main"),
     Details(title = "Details"),
     Forecast(title = "Forecast")
@@ -37,7 +35,7 @@ fun WeatherApp(
     val image = getBackgroundImage()
     NavHost(
         navController = navController,
-        startDestination = NavigationGraph.CurrentWeather.name
+        startDestination = NavigationGraph.Forecast.name
     ){
         composable(route = NavigationGraph.Forecast.name){
             ForecastScreen(

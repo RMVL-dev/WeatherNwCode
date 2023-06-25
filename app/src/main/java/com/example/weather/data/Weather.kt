@@ -19,7 +19,7 @@ data class Weather(
     @SerialName("clouds")
     val clouds: Clouds,
     @SerialName("dt")
-    val dt:Int,
+    val dt:Long,
     @SerialName("sys")
     val sun:RiseSet? = null,
     @SerialName("name")
