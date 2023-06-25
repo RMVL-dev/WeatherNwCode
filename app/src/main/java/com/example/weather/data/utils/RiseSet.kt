@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RiseSet(
     @SerialName("sunrise")
-    val sunrise:Int? = null,
+    val sunrise:Long? = null,
     @SerialName("sunset")
-    val sunset:Int? = null
+    val sunset:Long? = null
 )

@@ -1,5 +1,6 @@
 package com.example.weather.navigation
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,27 +33,35 @@ fun WeatherApp(
         factory = AppViewModelsProvider.Factory
     )
 ){
-    val image = getBackgroundImage()
+    @DrawableRes val image = getBackgroundImage()
     NavHost(
         navController = navController,
-        startDestination = NavigationGraph.Forecast.name
+        startDestination = NavigationGraph.CurrentWeather.name
     ){
         composable(route = NavigationGraph.Forecast.name){
             ForecastScreen(
                 forecastViewModel = forecastViewModel,
-                background = image
+                background = image,
+                navigateToCurrent = {navController.navigate(route = NavigationGraph.CurrentWeather.name)}
             )
         }
         composable(route = NavigationGraph.CurrentWeather.name){
             CurrentWeatherScreen(
                 viewModel = currentWeatherViewModel,
                 backgroundImage = image,
-                navigateToDetails = {navController.navigate(route = NavigationGraph.Details.name)}
+                navigateToDetails = {
+                    navController.navigate(route = NavigationGraph.Details.name)
+                },
+                navigateToForecast = {
+                    navController.navigate(route = NavigationGraph.Forecast.name)
+                }
             )
         }
         composable(route = NavigationGraph.Details.name){
             DetailsScreen(
-                backgroundImage = image
+                backgroundImage = image,
+                viewModel = currentWeatherViewModel,
+                navigateToCurrent = {navController.navigate(route = NavigationGraph.CurrentWeather.name)}
             )
         }
     }

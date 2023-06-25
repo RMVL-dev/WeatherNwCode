@@ -4,4 +4,6 @@
     <string name="humidity">Влажность:</string>
     <string name="pressure">Давление:</string>
     <string name="weather">Weather</string>
+    <string name="forecast">Прогноз</string>
+    <string name="current">Главная</string>
 </resources>

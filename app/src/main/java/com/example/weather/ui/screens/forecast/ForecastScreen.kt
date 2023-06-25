@@ -12,12 +12,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.weather.R
 import com.example.weather.data.Weather
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -37,13 +40,15 @@ import java.util.Date
 fun ForecastScreen(
     modifier: Modifier = Modifier,
     forecastViewModel: ForecastViewModel,
+    navigateToCurrent: () -> Unit,
     @DrawableRes background:Int
 ){
     when(forecastViewModel.forecastUiState){
         is ForecastState.Success -> {
             Forecast(
                 forecast = (forecastViewModel.forecastUiState as ForecastState.Success).forecast,
-                background = background
+                background = background,
+                navigateToCurrent = {navigateToCurrent()}
             )
         }
         is ForecastState.Error -> {
@@ -60,6 +65,7 @@ fun ForecastScreen(
 fun Forecast(
     modifier: Modifier = Modifier,
     forecast: Forecast,
+    navigateToCurrent:()->Unit,
     @DrawableRes background: Int
 ){
     Box(
@@ -71,14 +77,44 @@ fun Forecast(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-
-        LazyRow(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 180.dp)
-        ){
-            items(forecast.Forecast){ item ->
-                ForecastCard(weather = item)
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Column(
+                modifier = modifier.wrapContentHeight(),
+                //verticalArrangement = Arrangement.Bottom
+            ) {
+                LazyRow(
+                    modifier = modifier
+                        .wrapContentHeight()
+                        .padding(
+                            bottom = 100.dp,
+                            start = 5.dp,
+                            end = 5.dp
+                        ),
+                    //verticalAlignment = Alignment.Bottom
+                ) {
+                    items(
+                        forecast.Forecast
+                    ) { item ->
+                        ForecastCard(weather = item)
+                    }
+                }
+            }
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 50.dp, end = 20.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Button(
+                    modifier = modifier,
+                    onClick = { navigateToCurrent() }
+                ) {
+                    Text(text = stringResource(id = R.string.current))
+                }
             }
         }
     }
@@ -121,7 +157,7 @@ fun ForecastCard(
             Text(
                 text = SimpleDateFormat("HH")
                     .format(
-                        Date((weather.dt*1000).toLong())
+                        Date(weather.dt*1000)
                     ),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Black
