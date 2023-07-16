@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.weather.R
 import com.example.weather.providers.AppViewModelsProvider
 import com.example.weather.ui.screens.details.DetailsScreen
 import com.example.weather.ui.screens.forecast.ForecastScreen
@@ -33,7 +34,8 @@ fun WeatherApp(
         factory = AppViewModelsProvider.Factory
     )
 ){
-    @DrawableRes val image = getBackgroundImage()
+    //@DrawableRes val image = getBackgroundImage()
+    @DrawableRes val image = R.drawable.weathersbackground
     NavHost(
         navController = navController,
         startDestination = NavigationGraph.CurrentWeather.name
@@ -48,6 +50,7 @@ fun WeatherApp(
         composable(route = NavigationGraph.CurrentWeather.name){
             CurrentWeatherScreen(
                 viewModel = currentWeatherViewModel,
+                forecastViewModel = forecastViewModel,
                 backgroundImage = image,
                 navigateToDetails = {
                     navController.navigate(route = NavigationGraph.Details.name)
