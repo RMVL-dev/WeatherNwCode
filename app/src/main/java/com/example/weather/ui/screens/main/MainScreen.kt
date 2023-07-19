@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -172,20 +175,20 @@ fun CurrentWeather(
                     forecast = forecast
                 )
 
-                Row(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 50.dp, end = 20.dp)
-                    ,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        modifier = modifier,
-                        onClick = { navigateToForecast() }
-                    ) {
-                        Text(text = stringResource(id = R.string.forecast))
-                    }
-                }
+                //Row(
+                //    modifier = modifier
+                //        .fillMaxWidth()
+                //        .padding(bottom = 50.dp, end = 20.dp)
+                //    ,
+                //    horizontalArrangement = Arrangement.End
+                //) {
+                //    Button(
+                //        modifier = modifier,
+                //        onClick = { navigateToForecast() }
+                //    ) {
+                //        Text(text = stringResource(id = R.string.forecast))
+                //    }
+                //}
             }
         }
     }
@@ -207,7 +210,59 @@ fun ForecastList(
             .width(300.dp)
             .padding(10.dp)
         ) {
+            LazyColumn(
+                modifier = modifier
+            ){
+                items(forecast.Forecast) { item ->
+                    ForecastMainCard(
+                        weather = item
+                    )
+                }
+            }
+        }
+    }
+}
 
+@Composable
+fun ForecastMainCard(
+    modifier: Modifier = Modifier,
+    weather: Weather
+){
+    @DrawableRes val icon = getWeatherIcon(
+        weather.weather[0].icon
+    )
+
+    Card (
+        modifier = modifier
+            .padding(3.dp)
+    ){
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(modifier = modifier
+                //.weight(1f)
+            ) {
+                Text(
+                    text = SimpleDateFormat("dd.MM")
+                        .format(Date(weather.dt * 1000))
+                )
+                Text(text = SimpleDateFormat("HH:mm")
+                    .format(Date(weather.dt*1000)))
+            }
+            Image(
+                painter = painterResource(id = icon),
+                contentDescription = weather.weather[0].description,
+                modifier = modifier.size(50.dp)
+                    //.weight(1f)
+            )
+            Text(
+                text = "${weather.currentWeather.feelsLike.toInt()}°",
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
     }
 }
