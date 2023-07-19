@@ -28,7 +28,6 @@ import com.example.weather.data.Weather
 import com.example.weather.ui.screens.loading.LoadingScreen
 import com.example.weather.ui.screens.main.MainViewModel
 import com.example.weather.ui.screens.main.WeatherState
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 

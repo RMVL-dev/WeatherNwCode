@@ -1,5 +1,6 @@
 package com.example.weather.data.utils
 
+import androidx.annotation.DrawableRes
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,5 +13,7 @@ data class CurrentWeather(
     @SerialName("description")
     val description:String,
     @SerialName("icon")
-    val icon: String
+    val iconRef: String,
+    @DrawableRes
+    var iconInner:Int? = null
 )

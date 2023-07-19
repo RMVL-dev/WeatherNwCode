@@ -10,4 +10,5 @@
     <color name="splash">#FFBC65A3</color>
     <color name="splash_text">#FF65a3bc</color>
     <color name="background">#FF99a6e3</color>
+    <color name="card_background">#FFB199E3</color>
 </resources>

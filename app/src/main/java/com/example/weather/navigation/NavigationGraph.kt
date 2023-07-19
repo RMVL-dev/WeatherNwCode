@@ -30,9 +30,6 @@ fun WeatherApp(
     currentWeatherViewModel: MainViewModel = viewModel(
         factory = AppViewModelsProvider.Factory
     ),
-    forecastViewModel: ForecastViewModel = viewModel(
-        factory = AppViewModelsProvider.Factory
-    )
 ){
     //@DrawableRes val image = getBackgroundImage()
     @DrawableRes val image = R.drawable.weathersbackground
@@ -40,31 +37,16 @@ fun WeatherApp(
         navController = navController,
         startDestination = NavigationGraph.CurrentWeather.name
     ){
-        composable(route = NavigationGraph.Forecast.name){
-            ForecastScreen(
-                forecastViewModel = forecastViewModel,
-                background = image,
-                navigateToCurrent = {navController.navigate(route = NavigationGraph.CurrentWeather.name)}
-            )
-        }
         composable(route = NavigationGraph.CurrentWeather.name){
             CurrentWeatherScreen(
                 viewModel = currentWeatherViewModel,
-                forecastViewModel = forecastViewModel,
                 backgroundImage = image,
                 navigateToDetails = {
-                    navController.navigate(route = NavigationGraph.Details.name)
+
                 },
                 navigateToForecast = {
-                    navController.navigate(route = NavigationGraph.Forecast.name)
+
                 }
-            )
-        }
-        composable(route = NavigationGraph.Details.name){
-            DetailsScreen(
-                backgroundImage = image,
-                viewModel = currentWeatherViewModel,
-                navigateToCurrent = {navController.navigate(route = NavigationGraph.CurrentWeather.name)}
             )
         }
     }

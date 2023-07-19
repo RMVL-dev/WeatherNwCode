@@ -140,7 +140,7 @@ fun ForecastCard(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png")
+                    .data("https://openweathermap.org/img/wn/${weather.weather[0].iconRef}@2x.png")
                     .crossfade(true).build(),
                 contentDescription = ""
             )

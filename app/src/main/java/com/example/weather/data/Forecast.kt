@@ -12,5 +12,6 @@ data class Forecast(
     @SerialName("list")
     val Forecast:List<Weather>,
     @SerialName("city")
-    val cityInfo: City
+    val cityInfo: City,
+    //val iconList: MutableList<Int> = mutableListOf()
 )

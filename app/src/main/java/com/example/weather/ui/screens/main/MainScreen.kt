@@ -3,6 +3,7 @@ package com.example.weather.ui.screens.main
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,12 +16,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -33,18 +34,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weather.R
 import com.example.weather.data.Forecast
 import com.example.weather.data.Weather
 import com.example.weather.ui.screens.forecast.ForecastState
-import com.example.weather.ui.screens.forecast.ForecastViewModel
 import com.example.weather.ui.screens.main.WeatherState.Success
 import com.example.weather.ui.screens.splash.SplashScreen
 import com.example.weather.ui.screens.utils.getWeatherIcon
+import com.example.weather.ui.screens.utils.toChangeIcon
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -53,7 +52,6 @@ import java.util.Date
 fun CurrentWeatherScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
-    forecastViewModel: ForecastViewModel,
     navigateToDetails: () -> Unit,
     navigateToForecast: () -> Unit,
     @DrawableRes backgroundImage: Int
@@ -61,37 +59,22 @@ fun CurrentWeatherScreen(
 
     if (
         viewModel.weatherState is WeatherState.Success &&
-        forecastViewModel.forecastUiState is ForecastState.Success
+        viewModel.forecastUiState is ForecastState.Success
     ){
+        (viewModel.forecastUiState as ForecastState.Success).forecast.toChangeIcon()
         CurrentWeather(
             backgroundImage = backgroundImage,
             weather = (viewModel.weatherState as Success).weather,
-            forecast = (forecastViewModel.forecastUiState as ForecastState.Success).forecast,
+            forecast = (viewModel.forecastUiState as ForecastState.Success).forecast,
             navigateToDetails = {navigateToDetails()},
             navigateToForecast = {navigateToForecast()}
         )
     }else if (
         viewModel.weatherState is WeatherState.Loading &&
-        forecastViewModel.forecastUiState is ForecastState.Loading
+        viewModel.forecastUiState is ForecastState.Loading
     ){
         SplashScreen()
     }
-
-    //when(viewModel.weatherState){
-    //    is Success -> {
-    //        CurrentWeather(
-    //            backgroundImage = backgroundImage,
-    //            weather = (viewModel.weatherState as Success).weather,
-    //            navigateToDetails = {navigateToDetails()},
-    //            navigateToForecast = {navigateToForecast()}
-    //        )
-    //    }
-    //    is WeatherState.Error -> {
-    //    }
-    //    is WeatherState.Loading -> {
-    //        SplashScreen()
-    //    }
-    //}
 }
 @Composable
 fun CurrentWeather(
@@ -102,7 +85,6 @@ fun CurrentWeather(
     navigateToDetails:()->Unit,
     navigateToForecast: ()->Unit
 ){
-    @DrawableRes val weatherIcon = getWeatherIcon(weather.weather[0].icon)
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -118,8 +100,7 @@ fun CurrentWeather(
         Column(
             modifier = modifier
                 .fillMaxSize(),
-                //.padding(start = 16.dp)
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             weather.name?.let {location ->
                 Text(
@@ -132,67 +113,76 @@ fun CurrentWeather(
             Divider(color = Color.White, thickness = 1.dp)
             Column(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .clickable { navigateToDetails() },
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(50.dp)
             ) {
                 Spacer(modifier = modifier.height(20.dp))
-                Text(
-                    text = SimpleDateFormat("E, d MMMM, HH:mm")
-                        .format(
-                            Date(weather.dt*1000)
-                        ),
-                    color = Color.White
+                MainWeather(
+                    weather = weather,
+                    navigateToDetails = { /*TODO*/ },
+                    navigateToForecast = { /*TODO*/ }
                 )
-                Text(
-                    text = "${weather.currentWeather.feelsLike.toInt()}°",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White,
-                    fontSize = 80.sp
-                )
-                Row(
-                    modifier = modifier
-                        .wrapContentWidth()
-                        .padding(bottom = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = weatherIcon),
-                        contentDescription = "",
-                        modifier = modifier
-                            .size(40.dp)
-                            .padding(end = 3.dp)
-                    )
-                    Text(
-                        text = weather.weather[0].description,
-                        color = Color.White,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontSize = 20.sp
-                    )
-                }
-                //Spacer(modifier = modifier.weight(4f))
                 ForecastList(
                     forecast = forecast
                 )
 
-                //Row(
-                //    modifier = modifier
-                //        .fillMaxWidth()
-                //        .padding(bottom = 50.dp, end = 20.dp)
-                //    ,
-                //    horizontalArrangement = Arrangement.End
-                //) {
-                //    Button(
-                //        modifier = modifier,
-                //        onClick = { navigateToForecast() }
-                //    ) {
-                //        Text(text = stringResource(id = R.string.forecast))
-                //    }
-                //}
             }
         }
     }
 }
+
+@Composable
+fun MainWeather(
+    modifier: Modifier = Modifier,
+    weather: Weather,
+    navigateToDetails:()->Unit,
+    navigateToForecast: ()->Unit
+){
+    @DrawableRes val weatherIcon = getWeatherIcon(weather.weather[0].iconRef)
+    Column(
+        modifier = modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .clickable { navigateToDetails() },
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = SimpleDateFormat("E, d MMMM, HH:mm")
+                .format(
+                    Date(weather.dt*1000)
+                ),
+            color = Color.White
+        )
+        Text(
+            text = "${weather.currentWeather.feelsLike.toInt()}°",
+            style = MaterialTheme.typography.headlineSmall,
+            color = Color.White,
+            fontSize = 80.sp
+        )
+        Row(
+            modifier = modifier
+                .wrapContentWidth()
+                .padding(bottom = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = weatherIcon),
+                contentDescription = "",
+                modifier = modifier
+                    .size(40.dp)
+                    .padding(end = 3.dp)
+            )
+            Text(
+                text = weather.weather[0].description,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 20.sp
+            )
+        }
+    }
+}
+
 
 @Composable
 fun ForecastList(
@@ -215,7 +205,7 @@ fun ForecastList(
             ){
                 items(forecast.Forecast) { item ->
                     ForecastMainCard(
-                        weather = item
+                        weather = item,
                     )
                 }
             }
@@ -228,40 +218,45 @@ fun ForecastMainCard(
     modifier: Modifier = Modifier,
     weather: Weather
 ){
-    @DrawableRes val icon = getWeatherIcon(
-        weather.weather[0].icon
-    )
-
     Card (
         modifier = modifier
             .padding(3.dp)
+            .wrapContentSize()
+            .background(color = colorResource(id = R.color.background))
     ){
         Row(
             modifier = modifier
                 .fillMaxWidth()
+                .background(colorResource(id = R.color.background))
                 .padding(5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(modifier = modifier
-                //.weight(1f)
+            Column(
+                modifier = modifier
             ) {
                 Text(
                     text = SimpleDateFormat("dd.MM")
-                        .format(Date(weather.dt * 1000))
+                        .format(Date(weather.dt * 1000)),
+                    color = Color.Black
                 )
-                Text(text = SimpleDateFormat("HH:mm")
-                    .format(Date(weather.dt*1000)))
+                Text(
+                    text = SimpleDateFormat("HH:mm")
+                        .format(Date(weather.dt*1000)),
+                    color = Color.Black
+                )
             }
-            Image(
-                painter = painterResource(id = icon),
-                contentDescription = weather.weather[0].description,
-                modifier = modifier.size(50.dp)
-                    //.weight(1f)
-            )
+            weather.weather[0].iconInner?.let { painterResource(id = it) }?.let {
+                Image(
+                    painter = it,
+                    contentDescription = weather.weather[0].description,
+                    modifier = modifier.size(50.dp)
+                )
+            }
             Text(
                 text = "${weather.currentWeather.feelsLike.toInt()}°",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.Black
             )
         }
     }
