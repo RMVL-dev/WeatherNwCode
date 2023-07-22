@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.repository.interfaces.WeatherRepository
 import com.example.weather.ui.screens.forecast.ForecastState
+import com.example.weather.ui.screens.utils.toChangeIcon
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -40,7 +41,9 @@ class MainViewModel(
     private fun getForecast(){
         viewModelScope.launch {
             forecastUiState = try {
-                ForecastState.Success(repository.getForecast())
+                val forecast = repository.getForecast()
+                forecast.toChangeIcon()
+                ForecastState.Success(forecast = forecast)
             }catch (e:IOException){
                 ForecastState.Error
             }catch (e:HttpException){

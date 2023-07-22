@@ -30,8 +30,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +44,6 @@ import com.example.weather.ui.screens.forecast.ForecastState
 import com.example.weather.ui.screens.main.WeatherState.Success
 import com.example.weather.ui.screens.splash.SplashScreen
 import com.example.weather.ui.screens.utils.getWeatherIcon
-import com.example.weather.ui.screens.utils.toChangeIcon
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -60,7 +61,7 @@ fun CurrentWeatherScreen(
         viewModel.weatherState is WeatherState.Success &&
         viewModel.forecastUiState is ForecastState.Success
     ){
-        (viewModel.forecastUiState as ForecastState.Success).forecast.toChangeIcon()
+        //(viewModel.forecastUiState as ForecastState.Success).forecast.toChangeIcon()
         CurrentWeather(
             backgroundImage = backgroundImage,
             weather = (viewModel.weatherState as Success).weather,
@@ -120,7 +121,7 @@ fun CurrentWeather(
                 MainWeather(
                     weather = weather,
                     navigateToDetails = { /*TODO*/ },
-                    navigateToForecast = { /*TODO*/ }
+                    navigateToForecast = { navigateToForecast() }
                 )
                 ForecastList(
                     forecast = forecast
@@ -143,7 +144,7 @@ fun MainWeather(
         modifier = modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            .clickable { navigateToDetails() },
+            .clickable { navigateToForecast() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
