@@ -30,10 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +40,7 @@ import com.example.weather.data.Weather
 import com.example.weather.ui.screens.forecast.ForecastState
 import com.example.weather.ui.screens.main.WeatherState.Success
 import com.example.weather.ui.screens.splash.SplashScreen
+import com.example.weather.ui.screens.test.TestMainScreen
 import com.example.weather.ui.screens.utils.getWeatherIcon
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -54,16 +52,13 @@ fun CurrentWeatherScreen(
     viewModel: MainViewModel,
     navigateToDetails: () -> Unit,
     navigateToForecast: () -> Unit,
-    @DrawableRes backgroundImage: Int
 ){
 
     if (
         viewModel.weatherState is WeatherState.Success &&
         viewModel.forecastUiState is ForecastState.Success
     ){
-        //(viewModel.forecastUiState as ForecastState.Success).forecast.toChangeIcon()
-        CurrentWeather(
-            backgroundImage = backgroundImage,
+        TestMainScreen(
             weather = (viewModel.weatherState as Success).weather,
             forecast = (viewModel.forecastUiState as ForecastState.Success).forecast,
             navigateToDetails = {navigateToDetails()},
@@ -77,58 +72,31 @@ fun CurrentWeatherScreen(
     }
 }
 @Composable
-fun CurrentWeather(
+fun TestMainWeather(
     modifier: Modifier = Modifier,
-    @DrawableRes backgroundImage:Int,
     weather: Weather,
-    forecast:Forecast,
-    navigateToDetails:()->Unit,
-    navigateToForecast: ()->Unit
+    navigateToForecast: () -> Unit
 ){
-    Box(
+    Column(
         modifier = modifier
-            .fillMaxSize()
-
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            painter = painterResource(id = backgroundImage),
-            contentDescription = "",
-            modifier = modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-        Column(
-            modifier = modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            weather.name?.let {location ->
-                Text(
-                    text = location,
-                    modifier = modifier,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Color.White
-                )
-            }
-            Divider(color = Color.White, thickness = 1.dp)
-            Column(
-                modifier = modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(50.dp)
-            ) {
-                Spacer(modifier = modifier.height(20.dp))
-                MainWeather(
-                    weather = weather,
-                    navigateToDetails = { /*TODO*/ },
-                    navigateToForecast = { navigateToForecast() }
-                )
-                ForecastList(
-                    forecast = forecast
-                )
-
-            }
+        weather.name?.let {location ->
+            Text(
+                text = location,
+                modifier = modifier,
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.White
+            )
         }
+        Divider(color = Color.White, thickness = 1.dp)
+        Spacer(modifier = modifier.height(20.dp))
+        MainWeather(
+            weather = weather,
+            navigateToDetails = { /*TODO*/ },
+            navigateToForecast = { navigateToForecast() }
+        )
     }
 }
 
@@ -170,14 +138,14 @@ fun MainWeather(
                 painter = painterResource(id = weatherIcon),
                 contentDescription = "",
                 modifier = modifier
-                    .size(40.dp)
-                    .padding(end = 3.dp)
+                    .size(60.dp)
+                    .padding(end = 10.dp)
             )
             Text(
                 text = weather.weather[0].description,
                 color = Color.White,
                 style = MaterialTheme.typography.headlineSmall,
-                fontSize = 20.sp
+                fontSize = 40.sp
             )
         }
     }
